@@ -11,8 +11,5 @@ A simple terminal screensaver inspired by cbonsai
 ### Building from source
 
 ```bash
-git clone https://github.com/DCCXXV/flores.git
-cd flores
-go build
-sudo mv flores /usr/local/bin/
+go install github.com/DCCXXV/flores@latest
 ```
