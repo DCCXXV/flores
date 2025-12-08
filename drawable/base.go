@@ -1,8 +1,10 @@
 package drawable
+
 import (
-   	"github.com/gdamore/tcell/v2"
+	"github.com/gdamore/tcell/v2"
 )
 
+// TODO: add more flowerpot types and randomize it
 func DrawBase(s tcell.Screen, x, y int) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorSandyBrown)
 	s.PutStrStyled(x-3, y, "_______", style)
