@@ -30,7 +30,7 @@ func main() {
 			ev := s.PollEvent()
 			switch ev := ev.(type) {
 			case *tcell.EventKey:
-				if ev.Rune() == 'q' || ev.Key() == tcell.KeyEscape {
+				if ev.Rune() == 'q' || ev.Key() == tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
 					close(quit)
 					return
 				}
