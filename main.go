@@ -12,7 +12,7 @@ import (
 
 func main() {
 	speed := pflag.IntP("speed", "s", 25, "time in ms of sleep between actions")
-	single := pflag.Bool("single", false, "single flower in a flowerpot")
+	single := pflag.Bool("single", false, "single flower in a flowerpot (it is recommended to change speed")
 	straight := pflag.Bool("straight", false, "straight flower(s)")
 
 	pflag.Parse()
@@ -69,15 +69,15 @@ func main() {
 				}
 			}
 
-			drawable.DrawFlower(s, w/2, h/2, rs, rf)
+			drawable.DrawFlower(s, x, h/2, rs, rf)
 			s.Show()
 
 			if interruptibleSleep(20 * time.Duration(*speed) * time.Millisecond) {
 				return
 			}
 
-			for y := h/2 - 8; y < h-6; y++ {
-				s.PutStr(w/2-8, y, "                ")
+			for y := h/2 - 8; y <= h-6; y++ {
+				s.PutStr(w/2-10, y, "                    ")
 			}
 		}
 	} else {
