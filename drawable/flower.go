@@ -1,11 +1,24 @@
 package drawable
 
 import (
+	"math/rand/v2"
 	"strings"
 
 	"github.com/DCCXXV/flores/utils"
 	"github.com/gdamore/tcell/v2"
 )
+
+const TotalFlowers = 7
+
+var Flowers = map[string]int{
+	"daisy":     0,
+	"rose":      1,
+	"sunflower": 2,
+	"lavender":  3,
+	"poppy":     4,
+	"cherry":    5,
+	"speedwell": 6,
+}
 
 /*
 draws a flower where:
@@ -13,7 +26,7 @@ x,y -> x,y-1 is where the tail ends
 d -> dimension/size (optional for some flowers)
 t -> type of flower :3
 */
-func DrawFlower(s tcell.Screen, x, y, d, t int) {
+func DrawFlower(s tcell.Screen, random *rand.Rand, x, y, d, t int) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
 	switch t {
 	case 0: // daisy
@@ -28,7 +41,9 @@ func DrawFlower(s tcell.Screen, x, y, d, t int) {
 			s.PutStrStyled(x+i, y+i, "\\", style)
 		}
 	case 1: // rose
-		style = tcell.StyleDefault.Foreground(tcell.ColorRed)
+		petalColors := []tcell.Color{tcell.ColorRed, tcell.ColorLightSteelBlue, tcell.ColorSeashell}
+		randomColor := petalColors[random.IntN(len(petalColors))]
+		style = tcell.StyleDefault.Foreground(randomColor)
 		s.PutStrStyled(x-1, y, utils.GenerateRandomString(3), style)
 		s.PutStrStyled(x-1, y-1, utils.GenerateRandomString(3), style)
 		s.PutStrStyled(x-2, y-2, utils.GenerateRandomString(5), style)
@@ -72,7 +87,6 @@ func DrawFlower(s tcell.Screen, x, y, d, t int) {
 			s.PutStrStyled(x-4, y-2, "&$&", style)
 			s.PutStrStyled(x+2, y-2, "&#&", style)
 		}
-
 	case 3: // lavender
 		style = tcell.StyleDefault.Foreground(tcell.ColorPurple)
 		s.PutStrStyled(x-1, y, "\\|/", style.Foreground(tcell.ColorDarkGreen))
@@ -92,5 +106,44 @@ func DrawFlower(s tcell.Screen, x, y, d, t int) {
 		s.PutStrStyled(x-1, y-2, "o o", style)
 		s.PutStrStyled(x-1, y-3, "o o", style)
 		s.PutStrStyled(x-1, y-4, " 0 ", style)
+	case 4: // poppy
+		s.PutStrStyled(x, y, utils.GenerateRandomTile(), style.Foreground(tcell.ColorDarkRed))
+
+		petalColors := []tcell.Color{tcell.ColorRed}
+		randomColor := petalColors[random.IntN(len(petalColors))]
+		style := style.Foreground(randomColor)
+		s.PutStrStyled(x-1, y+1, utils.GenerateRandomString(3), style)
+		s.PutStrStyled(x-1, y-1, utils.GenerateRandomString(3), style)
+		s.PutStrStyled(x-2, y, utils.GenerateRandomString(2), style)
+		s.PutStrStyled(x+1, y, utils.GenerateRandomString(2), style)
+	case 5: // cherry
+		s.PutStrStyled(x, y, utils.GenerateRandomTile(), style.Foreground(tcell.ColorWhite))
+
+		petalColors := []tcell.Color{tcell.ColorPink, tcell.ColorPlum, tcell.ColorLightPink}
+		randomColor := petalColors[random.IntN(len(petalColors))]
+		style := style.Foreground(randomColor)
+		s.PutStrStyled(x-1, y+1, utils.GenerateRandomString(3), style)
+		s.PutStrStyled(x-1, y-1, utils.GenerateRandomString(3), style)
+		s.PutStrStyled(x-2, y, utils.GenerateRandomString(2), style)
+		s.PutStrStyled(x+1, y, utils.GenerateRandomString(2), style)
+	case 6: // speedwell
+		style := style.Foreground(tcell.ColorRoyalBlue)
+
+		s.PutStrStyled(x, y-4, "_", style)
+		s.PutStrStyled(x-2, y-3, "_/|\\_", style)
+
+		s.PutStrStyled(x-3, y-2, "/_", style)
+		s.PutStrStyled(x-1, y-2, "\\", style.Foreground(tcell.ColorLightBlue))
+		s.PutStrStyled(x, y-2, "@", style.Foreground(tcell.ColorYellow))
+		s.PutStrStyled(x+1, y-2, "/", style.Foreground(tcell.ColorLightBlue))
+		s.PutStrStyled(x+2, y-2, "_\\", style)
+
+		s.PutStrStyled(x-3, y-1, "\\_", style)
+		s.PutStrStyled(x-1, y-1, "/", style.Foreground(tcell.ColorLightBlue))
+		s.PutStrStyled(x, y-1, "|", style)
+		s.PutStrStyled(x+1, y-1, "\\", style.Foreground(tcell.ColorLightBlue))
+		s.PutStrStyled(x+2, y-1, "_/", style)
+
+		s.PutStrStyled(x-1, y, "\\_/", style)
 	}
 }

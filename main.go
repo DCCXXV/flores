@@ -13,7 +13,7 @@ import (
 func main() {
 	floresSeed := rand.Uint64()
 
-	speed := pflag.Uint64P("speed", "s", 25, "time in ms of sleep between actions")
+	speed := pflag.Uint64P("speed", "s", 50, "time in ms of sleep between actions")
 	single := pflag.BoolP("single", "i", false, "single flower in a flowerpot (it is recommended to change speed")
 	straight := pflag.BoolP("straight", "t", false, "straight flower(s)")
 	seed := pflag.Uint64P("seed", "e", floresSeed, "use a seed instead of randomizing")
@@ -61,7 +61,7 @@ func main() {
 				return
 			default:
 			}
-			rf := random.IntN(4)
+			rf := random.IntN(drawable.TotalFlowers)
 			rs := random.IntN(3) + 1
 			x := w / 2
 			for y := h - 6; y > h/2; y-- {
@@ -75,7 +75,7 @@ func main() {
 				}
 			}
 
-			drawable.DrawFlower(s, x, h/2, rs, rf)
+			drawable.DrawFlower(s, random, x, h/2, rs, rf)
 			s.Show()
 
 			if interruptibleSleep(20 * time.Duration(*speed) * time.Millisecond) {
@@ -94,7 +94,7 @@ func main() {
 			default:
 			}
 
-			rf := random.IntN(4)
+			rf := random.IntN(drawable.TotalFlowers)
 			rs := random.IntN(3) + 1
 			ry := random.IntN(h - 10)
 			rx := random.IntN(w)
@@ -151,7 +151,7 @@ func main() {
 				}
 			}
 			// TODO: if flower is taller d should be higher
-			drawable.DrawFlower(s, rx, h-ry, rs, rf)
+			drawable.DrawFlower(s, random, rx, h-ry, rs, rf)
 			s.Show()
 			if interruptibleSleep(time.Duration(*speed) * time.Millisecond) {
 				return
