@@ -8,10 +8,11 @@ import (
 )
 
 /*
- * x,y -> x,y-1 is where the tail ends
- * d -> dimension/size (optional for some flowers)
- * t -> type of flower :3
- */
+draws a flower where:
+x,y -> x,y-1 is where the tail ends
+d -> dimension/size (optional for some flowers)
+t -> type of flower :3
+*/
 func DrawFlower(s tcell.Screen, x, y, d, t int) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
 	switch t {

@@ -8,8 +8,6 @@ A simple terminal screensaver inspired by cbonsai
 
 ## Installation
 
-### Building from source
-
-```bash
+```
 go install github.com/DCCXXV/flores@latest
 ```

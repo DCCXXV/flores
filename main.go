@@ -1,7 +1,7 @@
 package main
 
 import (
-	"math/rand"
+	"math/rand/v2"
 	"time"
 
 	"github.com/spf13/pflag"
@@ -11,11 +11,17 @@ import (
 )
 
 func main() {
-	speed := pflag.IntP("speed", "s", 25, "time in ms of sleep between actions")
-	single := pflag.Bool("single", false, "single flower in a flowerpot (it is recommended to change speed")
-	straight := pflag.Bool("straight", false, "straight flower(s)")
+	floresSeed := rand.Uint64()
+
+	speed := pflag.Uint64P("speed", "s", 25, "time in ms of sleep between actions")
+	single := pflag.BoolP("single", "i", false, "single flower in a flowerpot (it is recommended to change speed")
+	straight := pflag.BoolP("straight", "t", false, "straight flower(s)")
+	seed := pflag.Uint64P("seed", "e", floresSeed, "use a seed instead of randomizing")
 
 	pflag.Parse()
+
+	// probably a better way to do it
+	random := rand.New(rand.NewPCG(*seed, *seed))
 
 	s, _ := tcell.NewScreen()
 	s.Init()
@@ -55,12 +61,12 @@ func main() {
 				return
 			default:
 			}
-			rf := rand.Intn(4)
-			rs := rand.Intn(3) + 1
+			rf := random.IntN(4)
+			rs := random.IntN(3) + 1
 			x := w / 2
 			for y := h - 6; y > h/2; y-- {
 				if !*straight {
-					x += rand.Intn(3) - 1
+					x += random.IntN(3) - 1
 				}
 				s.SetContent(x, y, '|', nil, style)
 				s.Show()
@@ -88,22 +94,22 @@ func main() {
 			default:
 			}
 
-			rf := rand.Intn(4)
-			rs := rand.Intn(3) + 1
-			ry := rand.Intn(h - 10)
-			rx := rand.Intn(w)
+			rf := random.IntN(4)
+			rs := random.IntN(3) + 1
+			ry := random.IntN(h - 10)
+			rx := random.IntN(w)
 
 			for y := h; y > h-ry; y-- {
 				tile, _, _ := s.Get(rx, y)
 				if tile == " " {
 
 					if !*straight {
-						rx += rand.Intn(3) - 1
+						rx += random.IntN(3) - 1
 					}
 
 					// leaf
-					if rand.Intn(15) == 0 {
-						if rand.Intn(2) == 0 {
+					if random.IntN(15) == 0 {
+						if random.IntN(2) == 0 { // direction of the leaf
 							go func() {
 								x := rx
 								if interruptibleSleep(time.Duration(*speed) * time.Millisecond) {
