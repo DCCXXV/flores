@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand/v2"
 	"time"
 
@@ -17,8 +18,19 @@ func main() {
 	single := pflag.BoolP("single", "i", false, "single flower in a flowerpot (it is recommended to change speed")
 	straight := pflag.BoolP("straight", "t", false, "straight flower(s)")
 	seed := pflag.Uint64P("seed", "e", floresSeed, "use a seed instead of randomizing")
+	setFlowers := pflag.StringSliceP("flowers", "f", nil, "set specific flowers to draw")
+	listFlowers := pflag.BoolP("list", "l", false, "list available flowers")
+	//trueColor := pflag.BoolP("true-color", "c", false, "use true color")
 
 	pflag.Parse()
+
+	if *listFlowers {
+		fmt.Println("Available flowers:")
+		for flower, _ := range drawable.Flowers {
+			fmt.Println("-", flower)
+		}
+		return
+	}
 
 	// probably a better way to do it
 	random := rand.New(rand.NewPCG(*seed, *seed))
@@ -61,8 +73,9 @@ func main() {
 				return
 			default:
 			}
-			rf := random.IntN(drawable.TotalFlowers)
-			rs := random.IntN(3) + 1
+
+			rf, rs, _, _ := randomize(random, *setFlowers, h, w)
+
 			x := w / 2
 			for y := h - 6; y > h/2; y-- {
 				if !*straight {
@@ -83,7 +96,7 @@ func main() {
 			}
 
 			for y := h/2 - 8; y <= h-6; y++ {
-				s.PutStr(w/2-10, y, "                    ")
+				s.PutStr(w/2-12, y, "                        ")
 			}
 		}
 	} else {
@@ -94,10 +107,7 @@ func main() {
 			default:
 			}
 
-			rf := random.IntN(drawable.TotalFlowers)
-			rs := random.IntN(3) + 1
-			ry := random.IntN(h - 10)
-			rx := random.IntN(w)
+			rf, rs, ry, rx := randomize(random, *setFlowers, h, w)
 
 			for y := h; y > h-ry; y-- {
 				tile, _, _ := s.Get(rx, y)
@@ -158,4 +168,23 @@ func main() {
 			}
 		}
 	}
+}
+
+func randomize(random *rand.Rand, flowers []string, h, w int) (int, int, int, int) {
+	rf := random.IntN(drawable.TotalFlowers)
+
+	if flowers != nil {
+		newFlowers := []int{}
+		for _, flower := range flowers {
+			newFlowers = append(newFlowers, drawable.Flowers[flower])
+		}
+		aux := random.IntN(len(flowers))
+		rf = newFlowers[aux]
+	}
+
+	rs := random.IntN(3) + 1
+	ry := random.IntN(h - 10)
+	rx := random.IntN(w)
+
+	return rf, rs, ry, rx
 }

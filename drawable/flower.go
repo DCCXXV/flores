@@ -8,8 +8,6 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-const TotalFlowers = 7
-
 var Flowers = map[string]int{
 	"daisy":     0,
 	"rose":      1,
@@ -17,15 +15,17 @@ var Flowers = map[string]int{
 	"lavender":  3,
 	"poppy":     4,
 	"cherry":    5,
-	"speedwell": 6,
+	"bluet":     6,
 }
 
-/*
-draws a flower where:
-x,y -> x,y-1 is where the tail ends
-d -> dimension/size (optional for some flowers)
-t -> type of flower :3
-*/
+var TotalFlowers = len(Flowers)
+
+// DrawFlower draws a flower where:
+//   - s is the screen
+//   - random is the random number generator
+//   - x,y -> x,y-1 is where the stem ends
+//   - d is the dimension/size (optional for some flowers)
+//   - t is the type of flower :3
 func DrawFlower(s tcell.Screen, random *rand.Rand, x, y, d, t int) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
 	switch t {
@@ -122,11 +122,12 @@ func DrawFlower(s tcell.Screen, random *rand.Rand, x, y, d, t int) {
 		petalColors := []tcell.Color{tcell.ColorPink, tcell.ColorPlum, tcell.ColorLightPink}
 		randomColor := petalColors[random.IntN(len(petalColors))]
 		style := style.Foreground(randomColor)
+
 		s.PutStrStyled(x-1, y+1, utils.GenerateRandomString(3), style)
 		s.PutStrStyled(x-1, y-1, utils.GenerateRandomString(3), style)
 		s.PutStrStyled(x-2, y, utils.GenerateRandomString(2), style)
 		s.PutStrStyled(x+1, y, utils.GenerateRandomString(2), style)
-	case 6: // speedwell
+	case 6: // bluet
 		style := style.Foreground(tcell.ColorRoyalBlue)
 
 		s.PutStrStyled(x, y-4, "_", style)
