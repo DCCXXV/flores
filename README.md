@@ -2,7 +2,7 @@
 
 > Flowers in your terminal!
 
-A simple terminal screensaver inspired by cbonsai
+A simple terminal screensaver inspired by cbonsai and cmatrix
 
 ![Example](screenshot.png)
 

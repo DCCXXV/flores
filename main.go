@@ -5,9 +5,9 @@ import (
 	"math/rand/v2"
 	"time"
 
+	"github.com/DCCXXV/flores/drawable"
 	"github.com/spf13/pflag"
 
-	"github.com/DCCXXV/flores/drawable"
 	"github.com/gdamore/tcell/v2"
 )
 
@@ -20,7 +20,7 @@ func main() {
 	seed := pflag.Uint64P("seed", "e", floresSeed, "use a seed instead of randomizing")
 	setFlowers := pflag.StringSliceP("flowers", "f", nil, "set specific flowers to draw")
 	listFlowers := pflag.BoolP("list", "l", false, "list available flowers")
-	//trueColor := pflag.BoolP("true-color", "c", false, "use true color")
+	trueColor := pflag.BoolP("true-color", "c", false, "use true color")
 
 	pflag.Parse()
 
@@ -32,13 +32,17 @@ func main() {
 		return
 	}
 
+	if *trueColor {
+		drawable.TrueColorOn()
+	}
+
 	// probably a better way to do it
 	random := rand.New(rand.NewPCG(*seed, *seed))
 
 	s, _ := tcell.NewScreen()
 	s.Init()
 	defer s.Fini()
-	style := tcell.StyleDefault.Foreground(tcell.ColorGreen)
+	style := drawable.Green
 	w, h := s.Size()
 
 	quit := make(chan any)
@@ -66,13 +70,14 @@ func main() {
 	}
 
 	if *single {
-		drawable.DrawBase(s, w/2, h-6)
 		for {
 			select {
 			case <-quit:
 				return
 			default:
 			}
+
+			drawable.DrawBase(s, w/2, h-6)
 
 			rf, rs, _, _ := randomize(random, *setFlowers, h, w)
 
@@ -91,7 +96,7 @@ func main() {
 			drawable.DrawFlower(s, random, x, h/2, rs, rf)
 			s.Show()
 
-			if interruptibleSleep(20 * time.Duration(*speed) * time.Millisecond) {
+			if interruptibleSleep(100 * time.Duration(*speed) * time.Millisecond) {
 				return
 			}
 
@@ -112,7 +117,6 @@ func main() {
 			for y := h; y > h-ry; y-- {
 				tile, _, _ := s.Get(rx, y)
 				if tile == " " {
-
 					if !*straight {
 						rx += random.IntN(3) - 1
 					}
