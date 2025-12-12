@@ -9,7 +9,7 @@ A simple terminal screensaver inspired by cbonsai and cmatrix
 ## Installation
 
 ```
-git clone github.com/DCCXXV/flores.git
+git clone https://github.com/DCCXXV/flores.git
 cd flores
 go install
 ```
