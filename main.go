@@ -36,9 +36,13 @@ func main() {
 
 	random := rand.New(rand.NewPCG(*seed, 0))
 
-	s, _ := tcell.NewScreen()
+	s, err := tcell.NewScreen()
+	if err != nil {
+		panic(err)
+	}
 	s.Init()
 	defer s.Fini()
+
 	style := drawable.GetColors().Green
 	w, h := s.Size()
 
