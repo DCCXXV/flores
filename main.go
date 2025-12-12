@@ -32,17 +32,14 @@ func main() {
 		return
 	}
 
-	if *trueColor {
-		drawable.TrueColorOn()
-	}
+	drawable.InitColors(*trueColor)
 
-	// probably a better way to do it
-	random := rand.New(rand.NewPCG(*seed, *seed))
+	random := rand.New(rand.NewPCG(*seed, 0))
 
 	s, _ := tcell.NewScreen()
 	s.Init()
 	defer s.Fini()
-	style := drawable.Green
+	style := drawable.GetColors().Green
 	w, h := s.Size()
 
 	quit := make(chan any)
